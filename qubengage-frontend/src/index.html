@@ -12,8 +12,8 @@
         let sortedURL = "http://semsort.esha.qpc.hal.davecutting.uk/";
         let totalHoursURL = "http://localhost:5000/calculate_total_hours";
 
-        function displayTotalHours(total_attendance) {
-            document.getElementById('output-text').value = 'Total Attendance (in hours) = ' + total_attendance + ' hours';
+        function displayTotalHours(total_hours) {
+            document.getElementById('output-text').value = 'Total Attendance (in hours) = ' + total_hours + ' hours';
 
         }
 
@@ -129,7 +129,7 @@
                     body: JSON.stringify({attendances})
                 })
                     .then(response => response.json())
-                    .then(displayTotalHours())
+                    .then(data => {displayTotalHours(data.total_hours)})
                     .catch(error => console.error('Error:', error));
             }
 
