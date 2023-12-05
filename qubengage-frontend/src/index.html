@@ -11,6 +11,7 @@
         let maxminURL = "http://semmaxmin.esha.qpc.hal.davecutting.uk/";
         let sortedURL = "http://semsort.esha.qpc.hal.davecutting.uk/";
         let totalHoursURL = "http://localhost:5000/calculate_total_hours";
+        let engagementScoreURL = "http://localhost:3000/calculate_engagement_score";
 
         function displayTotalHours(total_hours) {
             document.getElementById('output-text').value = 'Total Attendance (in hours) = ' + total_hours + ' hours';
@@ -26,6 +27,10 @@
         function displaySortedAttendance(sorted_attendance) {
             document.getElementById('output-text').value = sorted_attendance;
 
+        }
+
+        function displayEngagementScore(engagementScore) {
+            document.getElementById('output-text').value = 'Student Engagement Score: ' + engagementScore;
         }
 
         function displayError(message) {
@@ -105,33 +110,57 @@
                     }
                 }
             }
-                xhttp.open("GET", sortedURL + "?item_1=" + item_1 + "&attendance_1=" + attendance_1 + "&item_2=" + item_2 + "&attendance_2=" + attendance_2
-                    + "&item_3=" + item_3 + "&attendance_3=" + attendance_3 + "&item_4=" + item_4 + "&attendance_4=" + attendance_4);
-                xhttp.send();
-                return;
-            }
+            xhttp.open("GET", sortedURL + "?item_1=" + item_1 + "&attendance_1=" + attendance_1 + "&item_2=" + item_2 + "&attendance_2=" + attendance_2
+                + "&item_3=" + item_3 + "&attendance_3=" + attendance_3 + "&item_4=" + item_4 + "&attendance_4=" + attendance_4);
+            xhttp.send();
+            return;
+        }
 
-            function getTotalHours() {
+        function getTotalHours() {
 
-                let attendances = [
-                    parseInt(document.getElementById('attendance_1').value),
-                    parseInt(document.getElementById('attendance_2').value),
-                    parseInt(document.getElementById('attendance_3').value),
-                    parseInt(document.getElementById('attendance_4').value)
-                ];
+            let attendances = [
+                parseInt(document.getElementById('attendance_1').value),
+                parseInt(document.getElementById('attendance_2').value),
+                parseInt(document.getElementById('attendance_3').value),
+                parseInt(document.getElementById('attendance_4').value)
+            ];
 
-                // Make a POST request to the Flask server
-                fetch(totalHoursURL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({attendances})
+            // Make a POST request to the Flask server
+            fetch(totalHoursURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ attendances })
+            })
+                .then(response => response.json())
+                .then(data => { displayTotalHours(data.total_hours) })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function getEngagementScore() {
+
+            let lecture = parseInt(document.getElementById('attendance_1').value);
+            let lab = parseInt(document.getElementById('attendance_2').value);
+            let support = parseInt(document.getElementById('attendance_3').value);
+            let canvas = parseInt(document.getElementById('attendance_4').value);
+
+            // Make a POST request to the Node.js server for calculating engagement score
+            fetch(engagementScoreURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ lab, lecture, support, canvas }),
+                mode: 'cors',  // Include this option
+                credentials: 'same-origin',  // Include this option
+            })
+                .then(response => response.json())
+                .then(data => {
+                    displayEngagementScore(data.engagementScore)
                 })
-                    .then(response => response.json())
-                    .then(data => {displayTotalHours(data.total_hours)})
-                    .catch(error => console.error('Error:', error));
-            }
+                .catch(error => console.error('Error:', error));
+        }
 
     </script>
 
@@ -302,7 +331,7 @@
             <button class="sembutton-active" onclick="getTotalHours();">Total Attendance Hours</button>
         </div>
         <div>
-            <button class="sembutton-inactive" onclick="getEngagementScore();">Student Engagement Score</button>
+            <button class="sembutton-active" onclick="getEngagementScore();">Student Engagement Score</button>
         </div>
         <div>
             <button class="sembutton-inactive" onclick="getRisk();">Risk of Student Failure</button>
