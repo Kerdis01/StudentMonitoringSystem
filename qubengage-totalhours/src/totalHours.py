@@ -5,6 +5,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 def calculate_total_hours(attendances):
+    
     total_hours = sum(attendances)
     return total_hours
 
