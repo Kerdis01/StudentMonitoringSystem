@@ -47,10 +47,10 @@ test_php_maxmin:
     - apt-get install -yqq git
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
-    - cd qubengage-maxmin/src
+    - cd qubengage-maxmin
     - composer install
     - chmod +x ./vendor/bin/phpunit
-    - ./vendor/bin/phpunit src/test_maxMinFunctions.php
+    - ./vendor/bin/phpunit src
 
 test_php_sort:
   stage: test
@@ -60,7 +60,7 @@ test_php_sort:
     - apt-get install -yqq git
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
-    - cd qubengage-sort/src
+    - cd qubengage-sort
     - composer install
     - chmod +x ./vendor/bin/phpunit
     - ./vendor/bin/phpunit src
