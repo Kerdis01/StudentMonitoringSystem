@@ -11,6 +11,7 @@ test_go:
   stage: test
   image: golang:${GO_VERSION}-alpine
   script:
+    - export CGO_ENABLED=0
     - cd qubengage-averagehours/src
     - go test -v ./...
 
@@ -41,6 +42,10 @@ test_python:
 test_php_maxmin:
   stage: test
   image: php:${PHP_VERSION}-cli
+  before_script:
+    - apt-get update -yqq
+    - apt-get install -yqq git
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
     - cd qubengage-maxmin/src
     - composer install
@@ -49,6 +54,10 @@ test_php_maxmin:
 test_php_sort:
   stage: test
   image: php:${PHP_VERSION}-cli
+  before_script:
+    - apt-get update -yqq
+    - apt-get install -yqq git
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   script:
     - cd qubengage-sort/src
     - composer install
