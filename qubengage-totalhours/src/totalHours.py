@@ -9,12 +9,16 @@ def calculate_total_hours(attendances):
     total_hours = sum(attendances)
     return total_hours
 
-@app.route('/calculate_total_hours', methods=['POST'])
+@app.route('/calculate_total_hours', methods=['GET'])
 def calculate_total_hours_route():
-    data = request.json
-    attendances = data.get("attendances", [])
+    lecture = request.args.get('lecture', type=int, default=0)
+    lab = request.args.get('lab', type=int, default=0)
+    support = request.args.get('support', type=int, default=0)
+    canvas = request.args.get('canvas', type=int, default=0)
+
+    attendances = [lecture, lab, support, canvas]
     total_hours = calculate_total_hours(attendances)
-    
+
     return jsonify({"total_hours": total_hours}), 200
 
 if __name__ == '__main__':

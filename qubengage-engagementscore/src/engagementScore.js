@@ -3,44 +3,52 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
-const port = 3000; 
+const port = 4000; 
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
 function calculateStudentEngagementScore(lab, lecture, support, canvas) {
+
     lab = parseInt(lab)
     lecture = parseInt(lecture)
     support = parseInt(support)
     canvas = parseInt(canvas)
 
-    const totalHours = lab + lecture + support + canvas;
-    const lectureWeight = 0.7;
-    const labWeight = 0.8;
-    const supportWeight = 0.3;
-    const canvasWeight = 0.3;
+    const lectureTotalhours = 33
+    const lectureWeight = 0.3;
+    const labTotalHours = 22
+    const labWeight = 0.4;
+    const supportTotalHours = 44
+    const supportWeight = 0.15;
+    const canvasTotalHours = 55
+    const canvasWeight = 0.15;
 
-    const lectureTotalWeighted = lecture * lectureWeight / totalHours;
-    const labTotalWeighted = lab * labWeight / totalHours;
-    const supportTotalWeighted = support * supportWeight / totalHours;
-    const canvasTotalWeighted = canvas * canvasWeight / totalHours;
+    const lectureTotalWeighted = lecture * lectureWeight / lectureTotalhours;
+    const labTotalWeighted = lab * labWeight / labTotalHours;
+    const supportTotalWeighted = support * supportWeight / supportTotalHours;
+    const canvasTotalWeighted = canvas * canvasWeight / canvasTotalHours;
 
     const engagementScore = lectureTotalWeighted + labTotalWeighted + supportTotalWeighted + canvasTotalWeighted;
 
     return engagementScore;
 }
 
-// Endpoint for calculating student engagement score
-app.post('/calculate_engagement_score', (req, res) => {
-    const { lab, lecture, support, canvas } = req.body;
+// GET endpoint for calculating student engagement score
+app.get('/calculate_engagement_score', (req, res) => {
+    const { lab, lecture, support, canvas } = req.query;
 
-    if (typeof lab !== 'number' || typeof lecture !== 'number' || typeof support !== 'number' || typeof canvas !== 'number') {
-        return res.status(400).json({ error: 'Invalid input. All values must be numbers.' });
+    // Check if all required parameters are provided
+    if (!lab || !lecture || !support || !canvas) {
+        return res.status(400).json({ error: 'Please provide values for lab, lecture, support, and canvas.' });
     }
 
-    const score = calculateStudentEngagementScore(lab, lecture, support, canvas);
-    res.json({ engagementScore: score });
+    // Calculate the engagement score using the provided parameters
+    const engagementScore = calculateStudentEngagementScore(lab, lecture, support, canvas);
+
+    // Send the calculated engagement score as the response
+    res.json({ engagementScore });
 });
 
 // Start the server

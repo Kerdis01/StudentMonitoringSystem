@@ -11,26 +11,60 @@
         let maxminURL = "http://semmaxmin.esha.qpc.hal.davecutting.uk/";
         let sortedURL = "http://semsort.esha.qpc.hal.davecutting.uk/";
         let totalHoursURL = "http://localhost:5000/calculate_total_hours";
-        let engagementScoreURL = "http://localhost:3000/calculate_engagement_score";
+        let engagementScoreURL = "http://localhost:4000/calculate_engagement_score";
+        let checkRiskURL = "http://localhost:8080/check_risk";
+        let averageHoursURL = "http://localhost:8090/calculate_average_hours"
+
+        //validation functions
+        function validateInput(inputId, maxHours) {
+            var inputField = document.getElementById(inputId);
+            var inputValue = parseInt(inputField.value);
+
+            // Check if the input value is a valid number
+            if (isNaN(inputValue)) {
+                alert("Please enter a valid number for " + inputField.name);
+                inputField.value = ""; // Clear the input field
+                return false;
+            }
+
+            // Check if the input value exceeds the maximum allowed hours
+            if (inputValue > maxHours) {
+                alert(inputField.name + " should not exceed " + maxHours + " hours");
+                inputField.value = maxHours; // Set the input field to the maximum value
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateCutOff() {
+            return validateInput("cut-off", 100); // Assuming the maximum cut-off value is 100
+        }
 
         function displayTotalHours(total_hours) {
             document.getElementById('output-text').value = 'Total Attendance (in hours) = ' + total_hours + ' hours';
-
         }
 
         function displayMaxMin(max_attendance, min_attendance) {
             document.getElementById('output-text').value = 'Maximum attendance = ' + max_attendance + ' hours'
                 + '\nMinimum attendance = ' + min_attendance + ' hours';
-
         }
 
         function displaySortedAttendance(sorted_attendance) {
             document.getElementById('output-text').value = sorted_attendance;
-
         }
 
         function displayEngagementScore(engagementScore) {
-            document.getElementById('output-text').value = 'Student Engagement Score: ' + engagementScore;
+            const formattedScore = (engagementScore * 100).toFixed(2) + '%';
+            document.getElementById('output-text').value = 'Student Engagement Score: ' + formattedScore;
+        }
+
+        function displayFailureRisk(failureRisk) {
+            document.getElementById('output-text').value = failureRisk;
+        }
+
+        function displayAverageHours(averageHours) {
+            document.getElementById('output-text').value = 'Average Attendance (in hours) = ' + averageHours.toFixed(2) + ' hours';
         }
 
         function displayError(message) {
@@ -46,120 +80,214 @@
         }
 
         function getMaxMin() {
-            let item_1 = document.getElementById('item_1').value
-            let item_2 = document.getElementById('item_2').value
-            let item_3 = document.getElementById('item_3').value
-            let item_4 = document.getElementById('item_4').value
+            if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
+                && validateInput("attendance_3", 44) && validateInput("attendance_4", 55)) {
+                let item_1 = document.getElementById('item_1').value
+                let item_2 = document.getElementById('item_2').value
+                let item_3 = document.getElementById('item_3').value
+                let item_4 = document.getElementById('item_4').value
 
-            let attendance_1 = document.getElementById('attendance_1').value
-            let attendance_2 = document.getElementById('attendance_2').value
-            let attendance_3 = document.getElementById('attendance_3').value
-            let attendance_4 = document.getElementById('attendance_4').value
+                let attendance_1 = document.getElementById('attendance_1').value
+                let attendance_2 = document.getElementById('attendance_2').value
+                let attendance_3 = document.getElementById('attendance_3').value
+                let attendance_4 = document.getElementById('attendance_4').value
 
-            let xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4) {
-                    if (this.status == 200) {
-                        try {
-                            var j = JSON.parse(this.response);
-                            let max_attendance = j.max_item;
-                            let min_attendance = j.min_item;
-                            displayMaxMin(max_attendance, min_attendance);
-                        } catch (error) {
-                            displayError('Failed to parse response: ' + error.message);
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            try {
+                                var j = JSON.parse(this.response);
+                                let max_attendance = j.max_item;
+                                let min_attendance = j.min_item;
+                                displayMaxMin(max_attendance, min_attendance);
+                            } catch (error) {
+                                displayError('Failed to parse response: ' + error.message);
+                            }
+                        } else {
+                            displayError('Request failed with status: ' + this.status);
                         }
-                    } else {
-                        displayError('Request failed with status: ' + this.status);
                     }
-                }
-            };
-            xhttp.open("GET", maxminURL + "?item_1=" + item_1 + "&attendance_1=" + attendance_1 + "&item_2=" + item_2 + "&attendance_2=" + attendance_2
-                + "&item_3=" + item_3 + "&attendance_3=" + attendance_3 + "&item_4=" + item_4 + "&attendance_4=" + attendance_4);
-            xhttp.send();
-            return;
+                };
+                xhttp.open("GET", maxminURL + "?item_1=" + item_1 + "&attendance_1=" + attendance_1 + "&item_2=" + item_2 + "&attendance_2=" + attendance_2
+                    + "&item_3=" + item_3 + "&attendance_3=" + attendance_3 + "&item_4=" + item_4 + "&attendance_4=" + attendance_4);
+                xhttp.send();
+                return;
+            }
         }
 
         function getSortedAttendance() {
-            let item_1 = document.getElementById('item_1').value
-            let item_2 = document.getElementById('item_2').value
-            let item_3 = document.getElementById('item_3').value
-            let item_4 = document.getElementById('item_4').value
+            if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
+                && validateInput("attendance_3", 44) && validateInput("attendance_4", 55)) {
+                let item_1 = document.getElementById('item_1').value
+                let item_2 = document.getElementById('item_2').value
+                let item_3 = document.getElementById('item_3').value
+                let item_4 = document.getElementById('item_4').value
 
-            let attendance_1 = document.getElementById('attendance_1').value
-            let attendance_2 = document.getElementById('attendance_2').value
-            let attendance_3 = document.getElementById('attendance_3').value
-            let attendance_4 = document.getElementById('attendance_4').value
+                let attendance_1 = document.getElementById('attendance_1').value
+                let attendance_2 = document.getElementById('attendance_2').value
+                let attendance_3 = document.getElementById('attendance_3').value
+                let attendance_4 = document.getElementById('attendance_4').value
 
-            let xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4) {
-                    if (this.status == 200) {
-                        try {
-                            var j = JSON.parse(this.response);
-                            let sorted_attendance_returned = j.sorted_attendance;
-                            let sorted_attendance = '';
-                            for (let i = 0; i < sorted_attendance_returned.length; i++) {
-                                sorted_attendance += sorted_attendance_returned[i]['item'] + ' - ' + sorted_attendance_returned[i]['attendance'] + ' hours' + '\r\n';
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            try {
+                                var j = JSON.parse(this.response);
+                                let sorted_attendance_returned = j.sorted_attendance;
+                                let sorted_attendance = '';
+                                for (let i = 0; i < sorted_attendance_returned.length; i++) {
+                                    sorted_attendance += sorted_attendance_returned[i]['item'] + ' - ' + sorted_attendance_returned[i]['attendance'] + ' hours' + '\r\n';
+                                }
+                                displaySortedAttendance(sorted_attendance);
+                            } catch (error) {
+                                displayError('Failed to parse response: ' + error.message);
                             }
-                            displaySortedAttendance(sorted_attendance);
-                        } catch (error) {
-                            displayError('Failed to parse response: ' + error.message);
+                        } else {
+                            displayError('Request failed with status: ' + this.status);
                         }
-                    } else {
-                        displayError('Request failed with status: ' + this.status);
                     }
                 }
+                xhttp.open("GET", sortedURL + "?item_1=" + item_1 + "&attendance_1=" + attendance_1 + "&item_2=" + item_2 + "&attendance_2=" + attendance_2
+                    + "&item_3=" + item_3 + "&attendance_3=" + attendance_3 + "&item_4=" + item_4 + "&attendance_4=" + attendance_4);
+                xhttp.send();
+                return;
             }
-            xhttp.open("GET", sortedURL + "?item_1=" + item_1 + "&attendance_1=" + attendance_1 + "&item_2=" + item_2 + "&attendance_2=" + attendance_2
-                + "&item_3=" + item_3 + "&attendance_3=" + attendance_3 + "&item_4=" + item_4 + "&attendance_4=" + attendance_4);
-            xhttp.send();
-            return;
         }
 
         function getTotalHours() {
+            // Create a new Promise Object that we can use for averageHour calculations
+            return new Promise((resolve, reject) => {
+                if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
+                    && validateInput("attendance_3", 44) && validateInput("attendance_4", 55)) {
+                    let lecture = parseInt(document.getElementById('attendance_1').value);
+                    let lab = parseInt(document.getElementById('attendance_2').value);
+                    let support = parseInt(document.getElementById('attendance_3').value);
+                    let canvas = parseInt(document.getElementById('attendance_4').value);
 
-            let attendances = [
-                parseInt(document.getElementById('attendance_1').value),
-                parseInt(document.getElementById('attendance_2').value),
-                parseInt(document.getElementById('attendance_3').value),
-                parseInt(document.getElementById('attendance_4').value)
-            ];
-
-            // Make a POST request to the Flask server
-            fetch(totalHoursURL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ attendances })
-            })
-                .then(response => response.json())
-                .then(data => { displayTotalHours(data.total_hours) })
-                .catch(error => console.error('Error:', error));
+                    let xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4) {
+                            if (this.status == 200) {
+                                try {
+                                    let response = JSON.parse(this.responseText);
+                                    let totalHours = response.total_hours;
+                                    displayTotalHours(totalHours);
+                                    resolve(totalHours);
+                                } catch (error) {
+                                    displayError('Failed to parse response: ' + error.message);
+                                    reject(error);
+                                }
+                            } else {
+                                displayError('Request failed with status: ' + this.status);
+                                reject(new Error('Request failed with status: ' + this.status));
+                            }
+                        }
+                    };
+                    xhttp.open("GET", totalHoursURL + "?lab=" + lab + "&lecture=" + lecture + "&support=" + support + "&canvas=" + canvas);
+                    xhttp.send();
+                    return;
+                }
+            });
         }
 
         function getEngagementScore() {
+            // Create a new Promise Object that we can use for failureRisk calculations
+            return new Promise((resolve, reject) => {
+                if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
+                    && validateInput("attendance_3", 44) && validateInput("attendance_4", 55)) {
+                    let lecture = parseInt(document.getElementById('attendance_1').value);
+                    let lab = parseInt(document.getElementById('attendance_2').value);
+                    let support = parseInt(document.getElementById('attendance_3').value);
+                    let canvas = parseInt(document.getElementById('attendance_4').value);
 
-            let lecture = parseInt(document.getElementById('attendance_1').value);
-            let lab = parseInt(document.getElementById('attendance_2').value);
-            let support = parseInt(document.getElementById('attendance_3').value);
-            let canvas = parseInt(document.getElementById('attendance_4').value);
+                    let xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4) {
+                            if (this.status == 200) {
+                                try {
+                                    var j = JSON.parse(this.response);
+                                    let engagementScore = j.engagementScore;
+                                    displayEngagementScore(engagementScore);
+                                    resolve(engagementScore);
+                                } catch (error) {
+                                    displayError('Failed to parse response: ' + error.message);
+                                    reject(error);
+                                }
+                            } else {
+                                displayError('Request failed with status: ' + this.status);
+                                reject(new Error('Request failed with status: ' + this.status));
+                            }
+                        }
+                    };
 
-            // Make a POST request to the Node.js server for calculating engagement score
-            fetch(engagementScoreURL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ lab, lecture, support, canvas }),
-                mode: 'cors',  // Include this option
-                credentials: 'same-origin',  // Include this option
-            })
-                .then(response => response.json())
-                .then(data => {
-                    displayEngagementScore(data.engagementScore)
-                })
-                .catch(error => console.error('Error:', error));
+                    xhttp.open("GET", engagementScoreURL + "?lab=" + lab + "&lecture=" + lecture + "&support=" + support + "&canvas=" + canvas);
+                    xhttp.send();
+                } else {
+                    reject(new Error('Validation failed'));
+                }
+            });
+        }
+
+        async function getFailureRisk() {
+            if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
+                && validateInput("attendance_3", 44) && validateInput("attendance_4", 55) && validateCutOff()) {
+                try {
+                    let cutOffEngagementScore = parseInt(document.getElementById('cut-off').value);
+                    let engagementScore = await getEngagementScore(); // Wait for the promise to resolve
+
+                    let xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4) {
+                            if (this.status == 200) {
+                                try {
+                                    var j = JSON.parse(this.response);
+                                    let failureRisk = j.studentFailureRisk
+                                    displayFailureRisk(failureRisk)
+                                } catch (error) {
+                                    displayError('Failed to parse response: ' + error.message);
+                                }
+                            } else {
+                                displayError('Request failed with status: ' + this.status);
+                            }
+                        }
+                    };
+                    xhttp.open("GET", checkRiskURL + "?engagementScore=" + engagementScore + "&cutOff=" + cutOffEngagementScore);
+                    xhttp.send();
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    displayError('An error occurred: ' + error.message);
+                }
+            }
+        }
+
+        async function getAverageHours() {
+            if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
+                && validateInput("attendance_3", 44) && validateInput("attendance_4", 55)) {
+                try {
+                    let totalHours = await getTotalHours();
+                    let xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            try {
+                                let j = JSON.parse(this.responseText);
+                                let averageHours = j.average_hours;
+                                displayAverageHours(averageHours); // Display the average hours in the output box
+                            } catch (error) {
+                                displayError('Failed to parse response: ' + error.message);
+                            }
+                        } else {
+                            displayError('Request failed with status: ' + this.status);
+                        }
+                    };
+                    xhttp.open("GET", averageHoursURL + "?total_hours=" + totalHours);
+                    xhttp.send();
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    displayError('An error occurred: ' + error.message);
+                }
+            }
         }
 
     </script>
@@ -334,10 +462,10 @@
             <button class="sembutton-active" onclick="getEngagementScore();">Student Engagement Score</button>
         </div>
         <div>
-            <button class="sembutton-inactive" onclick="getRisk();">Risk of Student Failure</button>
+            <button class="sembutton-active" onclick="getFailureRisk();">Risk of Student Failure</button>
         </div>
         <div>
-            <button class="sembutton-inactive" onclick="getAttendanceToImprove();">???</button>
+            <button class="sembutton-active" onclick="getAverageHours();">Average Hours</button>
         </div>
         <div>
             <button class="sembutton-clear" onclick="clearText();">Clear</button>
