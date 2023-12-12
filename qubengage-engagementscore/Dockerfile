@@ -8,6 +8,7 @@ COPY package*.json ./
 RUN npm install
 RUN npm install body-parser
 RUN npm install cors
+RUN npm install --save-dev jest supertest
 COPY engagementScore.js ./
 EXPOSE 3000
 ENV NODE_ENV=production

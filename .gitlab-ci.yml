@@ -1,0 +1,61 @@
+stages:
+  - test
+
+variables:
+  JAVA_VERSION: '11'
+  GO_VERSION: '1.18'
+  PYTHON_VERSION: '3.8'
+  PHP_VERSION: '7.4'
+
+test_go:
+  stage: test
+  image: golang:${GO_VERSION}-alpine
+  script:
+    - cd qubengage-averagehours
+    - go test -v ./...
+
+test_java:
+  stage: test
+  image: gradle:jdk${JAVA_VERSION}
+  script:
+    - cd qubengagefailurerisk
+    - ./gradlew test
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - qubengagefailurerisk/build/test-results/test/*.xml
+    paths:
+      - qubengagefailurerisk/build/test-results/test/
+
+test_python:
+  stage: test
+  image: python:${PYTHON_VERSION}
+  script:
+    - cd qubengage-totalhours
+    - pip install -r requirements.txt  
+    - python -m unittest discover -s src
+
+test_php_maxmin:
+  stage: test
+  image: php:${PHP_VERSION}-cli
+  script:
+    - cd qubengage-maxmin
+    - composer install
+    - ./vendor/bin/phpunit src/test_maxMinFunctions.php
+
+test_php_sort:
+  stage: test
+  image: php:${PHP_VERSION}-cli
+  script:
+    - cd qubengage-sort
+    - composer install
+    - ./vendor/bin/phpunit src
+
+test_javascript:
+  stage: test
+  image: node:latest
+  script:
+    - cd qubengage-engagementscore
+    - npm install
+    - npm test

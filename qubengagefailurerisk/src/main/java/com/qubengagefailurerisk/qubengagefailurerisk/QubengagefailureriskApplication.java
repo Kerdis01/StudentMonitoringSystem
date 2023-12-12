@@ -18,8 +18,6 @@ public class QubengagefailureriskApplication {
 
     @GetMapping("/check_risk")
     public ResponseEntity<?> checkRisk(@RequestParam double engagementScore, @RequestParam int cutOff) {
-        // double engagementScore = engagementScoreRequest.getEngagementScore();
-        // do this in the frontend and await a response.
         try {
 
             if (engagementScore * 100 < cutOff) {
