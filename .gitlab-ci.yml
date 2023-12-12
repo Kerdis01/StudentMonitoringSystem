@@ -19,6 +19,7 @@ test_java:
   image: gradle:jdk${JAVA_VERSION}
   script:
     - cd qubengagefailurerisk
+    - chmod +x ./gradlew
     - ./gradlew test
   artifacts:
     when: always
@@ -27,6 +28,7 @@ test_java:
         - qubengagefailurerisk/build/test-results/test/*.xml
     paths:
       - qubengagefailurerisk/build/test-results/test/
+
 
 test_python:
   stage: test
