@@ -11,7 +11,7 @@ test_go:
   stage: test
   image: golang:${GO_VERSION}-alpine
   script:
-    - cd qubengage-averagehours
+    - cd qubengage-averagehours/src
     - go test -v ./...
 
 test_java:
@@ -42,7 +42,7 @@ test_php_maxmin:
   stage: test
   image: php:${PHP_VERSION}-cli
   script:
-    - cd qubengage-maxmin
+    - cd qubengage-maxmin/src
     - composer install
     - ./vendor/bin/phpunit src/test_maxMinFunctions.php
 
@@ -50,7 +50,7 @@ test_php_sort:
   stage: test
   image: php:${PHP_VERSION}-cli
   script:
-    - cd qubengage-sort
+    - cd qubengage-sort/src
     - composer install
     - ./vendor/bin/phpunit src
 
