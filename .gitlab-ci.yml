@@ -49,6 +49,7 @@ test_php_maxmin:
   script:
     - cd qubengage-maxmin/src
     - composer install
+    - chmod +x ./vendor/bin/phpunit
     - ./vendor/bin/phpunit src/test_maxMinFunctions.php
 
 test_php_sort:
@@ -61,6 +62,7 @@ test_php_sort:
   script:
     - cd qubengage-sort/src
     - composer install
+    - chmod +x ./vendor/bin/phpunit
     - ./vendor/bin/phpunit src
 
 test_javascript:
