@@ -1,4 +1,5 @@
 <?php
+namespace QubengageMaxmin;
 function getMaxMin($items, $attendances)
 {
     $item_attendances = array();

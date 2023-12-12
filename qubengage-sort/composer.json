@@ -1,0 +1,15 @@
+{
+    "autoload": {
+        "psr-4": {
+            "QubengageSort\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "QubengageSort\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}

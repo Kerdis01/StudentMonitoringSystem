@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'QubengageSort\\' => array($baseDir . '/src'),
+    'QubengageMaxmin\\' => array($baseDir . '/src'),
 );

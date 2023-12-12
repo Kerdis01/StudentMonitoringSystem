@@ -1,4 +1,5 @@
 <?php
+namespace QubengageSort;
 function getSortedAttendance($items, $attendances)
 {
     $item_attendances = array();
