@@ -2,7 +2,8 @@
     "autoload": {
         "psr-4": {
             "QubengageMaxmin\\": "src/"
-        }
+        },
+        "files": ["src/functions.inc.php"]
     },
     "autoload-dev": {
         "psr-4": {
