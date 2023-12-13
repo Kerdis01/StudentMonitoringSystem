@@ -5,8 +5,6 @@ namespace QubengageSort\Tests;
 use PHPUnit\Framework\TestCase;
 use function QubengageSort\getSortedAttendance;
 
-require 'vendor/autoload.php';
-
 class TestSortAttendancePHP extends TestCase
 {
     public function testGetSortedAttendance_returnsArrayWithSameNumberOfItems()

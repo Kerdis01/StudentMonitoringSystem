@@ -42,6 +42,9 @@ test_python:
 test_php_maxmin:
   stage: test
   image: php:${PHP_VERSION}-cli
+  cache:
+    paths:
+      - qubengage-maxmin/vendor/
   before_script:
     - apt-get update -yqq
     - apt-get install -yqq git
@@ -55,6 +58,9 @@ test_php_maxmin:
 test_php_sort:
   stage: test
   image: php:${PHP_VERSION}-cli
+  cache:
+    paths:
+      - qubengage-sort/vendor/
   before_script:
     - apt-get update -yqq
     - apt-get install -yqq git

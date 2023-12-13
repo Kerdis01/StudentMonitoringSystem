@@ -4,8 +4,6 @@ namespace QubengageMaxmin\Tests;
 use PHPUnit\Framework\TestCase;
 use function QubengageMaxmin\getMaxMin;
 
-require 'functions.inc.php';
-
 class maxMinFunctionsTest extends TestCase
 {
     public function testMaxMinFunctionWithValidInput()
