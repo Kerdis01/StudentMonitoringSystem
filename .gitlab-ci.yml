@@ -54,7 +54,7 @@ test_php_maxmin:
     - composer install
     - composer dump-autoload
     - chmod +x ./vendor/bin/phpunit
-    - ./vendor/bin/phpunit tests/
+    - ./vendor/bin/phpunit tests
 
 test_php_sort:
   stage: test
@@ -71,7 +71,7 @@ test_php_sort:
     - composer install
     - composer dump-autoload
     - chmod +x ./vendor/bin/phpunit
-    - ./vendor/bin/phpunit tests/
+    - ./vendor/bin/phpunit tests
 
 test_javascript:
   stage: test
