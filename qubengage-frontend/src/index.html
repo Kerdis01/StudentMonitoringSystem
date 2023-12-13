@@ -188,6 +188,8 @@
                     xhttp.open("GET", totalHoursURL + "?lab=" + lab + "&lecture=" + lecture + "&support=" + support + "&canvas=" + canvas);
                     xhttp.send();
                     return;
+                } else {
+                    reject(new Error('Validation failed'));
                 }
             });
         }
