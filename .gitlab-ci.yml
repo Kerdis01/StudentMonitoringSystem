@@ -5,7 +5,7 @@ variables:
   JAVA_VERSION: '17'
   GO_VERSION: '1.18'
   PYTHON_VERSION: '3.8'
-  PHP_VERSION: '8.1'
+  PHP_VERSION: '7.2'
 
 test_go:
   stage: test
