@@ -1,7 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-type: application/json");
-require('functions.inc.php');
+use function QubengageSort\getSortedAttendance;
 
 $output = array(
 	"error" => false,
