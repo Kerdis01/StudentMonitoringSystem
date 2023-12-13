@@ -50,7 +50,7 @@ test_php_maxmin:
     - cd qubengage-maxmin
     - composer install
     - chmod +x ./vendor/bin/phpunit
-    - ./vendor/bin/phpunit src
+    - ./vendor/bin/phpunit tests
 
 test_php_sort:
   stage: test
@@ -63,7 +63,7 @@ test_php_sort:
     - cd qubengage-sort
     - composer install
     - chmod +x ./vendor/bin/phpunit
-    - ./vendor/bin/phpunit src
+    - ./vendor/bin/phpunit tests
 
 test_javascript:
   stage: test
