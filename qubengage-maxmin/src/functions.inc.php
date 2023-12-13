@@ -1,19 +1,30 @@
 <?php
 namespace QubengageMaxmin;
+
 function getMaxMin($items, $attendances)
 {
-    $item_attendances = array();
-    for ($i = 0; $i < count($items); $i++) {
-      $item_attendances_array = array("item"=>$items[$i], "attendance"=>$attendances[$i]);
-      array_push($item_attendances,$item_attendances_array);
+    if (empty($items) || empty($attendances)) {
+        // If both arrays are empty, return two empty strings as per test case.
+        return ['', ''];
     }
 
-    usort($item_attendances, function($a, $b) {
-          return $b['attendance'] <=> $a['attendance'];
+    if (count($items) !== count($attendances)) {
+        // If array lengths are not equal, throw an exception as per test case.
+        throw new \InvalidArgumentException('Arrays $items and $attendances must have the same length.');
+    }
+
+    $itemAttendances = [];
+    foreach ($items as $i => $item) {
+        $itemAttendances[] = ["item" => $item, "attendance" => $attendances[$i]];
+    }
+
+    usort($itemAttendances, function($a, $b) {
+        return $b['attendance'] <=> $a['attendance'];
     });
 
-    $max_item = $item_attendances[0]['item'] . ' - ' . $item_attendances[0]['attendance'];
-    $min_item = $item_attendances[count($item_attendances)-1]['item'] . ' - ' . $item_attendances[count($item_attendances)-1]['attendance'];
+    // Get the item with max attendance (first after sorting) and min attendance (last after sorting)
+    $maxItem = $itemAttendances[0]['item'] . ' - ' . $itemAttendances[0]['attendance'];
+    $minItem = end($itemAttendances)['item'] . ' - ' . end($itemAttendances)['attendance'];
 
-    return array($max_item,$min_item);
+    return [$maxItem, $minItem];
 }
