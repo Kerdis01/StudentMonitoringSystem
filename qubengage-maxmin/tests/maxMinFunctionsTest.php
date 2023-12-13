@@ -35,8 +35,10 @@ class maxMinFunctionsTest extends TestCase
 
         $max_min_items = getMaxMin($items, $attendances);
 
-        $this->assertEquals($max_min_items[0], $max_min_items[1]);
+        $this->assertEquals('Item 4 - 20', $max_min_items[0]);
+        $this->assertEquals('Item 1 - 20', $max_min_items[1]);
     }
+
 
     public function testMaxMinFunctionWithUnequalArrayLengths()
     {
