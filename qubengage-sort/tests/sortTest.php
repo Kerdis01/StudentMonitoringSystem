@@ -1,51 +1,52 @@
 <?php
-
 namespace QubengageSort\Tests;
 
 use PHPUnit\Framework\TestCase;
 use function QubengageSort\getSortedAttendance;
 
-class TestSortAttendancePHP extends TestCase
+class SortTest extends TestCase
 {
-    public function testGetSortedAttendance_returnsArrayWithSameNumberOfItems()
+    public function testSortsItemsByAttendanceDescending()
     {
         $items = ['Item 1', 'Item 2', 'Item 3'];
         $attendances = [10, 5, 8];
-        
+        $expected = [
+            ['item' => 'Item 1', 'attendance' => 10],
+            ['item' => 'Item 3', 'attendance' => 8],
+            ['item' => 'Item 2', 'attendance' => 5]
+        ];
+
         $result = getSortedAttendance($items, $attendances);
-        
-        $this->assertCount(3, $result);
+        $this->assertEquals($expected, $result);
     }
 
-    public function testGetSortedAttendance_sortsItemsByAttendanceDescending()
+    public function testHandlesEmptyArrays()
     {
-        $items = ['Item 1', 'Item 2', 'Item 3'];
-        $attendances = [10, 5, 8];
-        
-        $result = getSortedAttendance($items, $attendances);
-        
-        $this->assertEquals('Item 1', $result[0]['item']);
-        $this->assertEquals('Item 3', $result[1]['item']);
-        $this->assertEquals('Item 2', $result[2]['item']);
-    }
-
-    public function testGetSortedAttendance_handlesEmptyArrays()
-    {
-        $items = [];
-        $attendances = [];
-        
-        $result = getSortedAttendance($items, $attendances);
-        
+        $result = getSortedAttendance([], []);
         $this->assertEmpty($result);
     }
 
-    public function testGetSortedAttendance_handlesDifferentArrayLengths()
+    public function testHandlesArraysWithSingleElement()
+    {
+        $items = ['Item 1'];
+        $attendances = [10];
+        $expected = [['item' => 'Item 1', 'attendance' => 10]];
+
+        $result = getSortedAttendance($items, $attendances);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testSortIsStableForEqualAttendances()
     {
         $items = ['Item 1', 'Item 2', 'Item 3'];
-        $attendances = [10, 5];
-        
+        $attendances = [20, 20, 20];
+        $expected = [
+            ['item' => 'Item 1', 'attendance' => 20],
+            ['item' => 'Item 2', 'attendance' => 20],
+            ['item' => 'Item 3', 'attendance' => 20]
+        ];
+
         $result = getSortedAttendance($items, $attendances);
-        
-        $this->assertCount(2, $result);
+        $this->assertEquals($expected, $result);
     }
 }
