@@ -6,6 +6,12 @@ use function QubengageSort\getSortedAttendance;
 
 class SortTest extends TestCase
 {
+    public function testSortedEndpointIsRunning() {
+        $url = "http://semsort.esha.qpc.hal.davecutting.uk/";
+        $response = file_get_contents($url);
+        $this->assertNotFalse($response, "The sorted endpoint is not running.");
+    }
+    
     public function testSortsItemsByAttendanceDescending()
     {
         $items = ['Item 1', 'Item 2', 'Item 3'];

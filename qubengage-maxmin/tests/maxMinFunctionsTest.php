@@ -7,6 +7,12 @@ use function QubengageMaxmin\getMaxMin;
 
 class maxMinFunctionsTest extends TestCase
 {
+    public function testMaxMinEndpointIsRunning() {
+        $url = "http://semmaxmin.esha.qpc.hal.davecutting.uk/";
+        $response = file_get_contents($url);
+        $this->assertNotFalse($response, "The maxmin endpoint is not running.");
+    }
+    
     public function testWithValidInputAndDifferentAttendances() {
         $items = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
         $attendances = [10, 20, 30, 40];
