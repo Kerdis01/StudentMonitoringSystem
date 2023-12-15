@@ -6,14 +6,15 @@
 
     <script type="text/javascript">
 
-        // hosted at: http://http://frontend-40292852.qpc.hal.davecutting.uk/
+        // hosted at: http://frontend-40292852.qpc.hal.davecutting.uk/
 
-        let maxminURL = "http://semmaxmin.esha.qpc.hal.davecutting.uk/";
-        let sortedURL = "http://semsort.esha.qpc.hal.davecutting.uk/";
-        let totalHoursURL = "http://totalhours-4029852.qpc.hal.davecutting.uk/calculate_total_hours";
-        let engagementScoreURL = "http://engagementscore-40292852.qpc.hal.davecutting.uk/calculate_engagement_score";
-        let checkRiskURL = "http://failurerisk-40292852.qpc.hal.davecutting.uk/check_risk";
-        let averageHoursURL = "http://averagehours-40292852.qpc.hal.davecutting.uk/calculate_average_hours"
+        const proxyBaseURL = "http://proxy-40292852.qpc.hal.davecutting.uk"
+        let maxminURL = proxyBaseURL + "/maxmin";
+        let sortedURL = proxyBaseURL + "/sorted";
+        let totalHoursURL = proxyBaseURL + "/totalhours";
+        let engagementScoreURL = proxyBaseURL + "/engagementscore";
+        let checkRiskURL = proxyBaseURL + "/checkrisk";
+        let averageHoursURL = proxyBaseURL + "/averagehours";
 
         //validation functions
         function validateInput(inputId, maxHours) {

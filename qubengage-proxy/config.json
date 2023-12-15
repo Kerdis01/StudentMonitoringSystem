@@ -1,9 +1,20 @@
 {
-    "/service1": {
-        "GET": "http://localhost:5001/service1",
-        "POST": "http://localhost:5001/service1"
+    "/maxmin": {
+        "GET": "http://semmaxmin.esha.qpc.hal.davecutting.uk/"
     },
-    "/service2": {
-        "GET": "http://localhost:5002/service2"
+    "/sorted": {
+        "GET": "http://semsort.esha.qpc.hal.davecutting.uk/"
+    },
+    "/totalhours": {
+        "GET": "http://totalhours-4029852.qpc.hal.davecutting.uk/calculate_total_hours"
+    },
+    "/engagementscore": {
+        "GET": "http://engagementscore-40292852.qpc.hal.davecutting.uk/calculate_engagement_score"
+    },
+    "/checkrisk": {
+        "GET": "http://failurerisk-40292852.qpc.hal.davecutting.uk/check_risk"
+    },
+    "/averagehours": {
+        "GET": "http://averagehours-40292852.qpc.hal.davecutting.uk/calculate_average_hours"
     }
 }
