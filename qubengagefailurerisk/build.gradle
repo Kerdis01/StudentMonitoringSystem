@@ -1,25 +1,38 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.2.0'
-	id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+	id 'application'
 }
 
 group = 'com.qubengagefailurerisk'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+    sourceCompatibility = '17'
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
+}
+
+application {
+    mainClass = 'com.qubengagefailurerisk.qubengagefailurerisk.QubengagefailureriskApplication'
+}
+
+springBoot {
+    mainClass = 'com.qubengagefailurerisk.qubengagefailurerisk.QubengagefailureriskApplication'
+}
+
+bootJar {
+    launchScript()
 }

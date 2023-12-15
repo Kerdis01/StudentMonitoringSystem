@@ -1,0 +1,9 @@
+{
+    "/service1": {
+        "GET": "http://localhost:5001/service1",
+        "POST": "http://localhost:5001/service1"
+    },
+    "/service2": {
+        "GET": "http://localhost:5002/service2"
+    }
+}
