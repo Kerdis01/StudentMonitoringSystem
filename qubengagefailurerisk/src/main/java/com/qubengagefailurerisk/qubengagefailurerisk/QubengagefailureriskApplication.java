@@ -20,7 +20,7 @@ public class QubengagefailureriskApplication {
     public ResponseEntity<?> checkRisk(@RequestParam double engagementScore, @RequestParam int cutOff) {
         try {
 
-            if (engagementScore * 100 < cutOff) {
+            if (engagementScore < cutOff) {
                 return ResponseEntity.ok(Map.of("studentFailureRisk", "Student is at risk of failure."));
             } else {
                 return ResponseEntity.ok(Map.of("studentFailureRisk", "Student is not at risk of failure."));
