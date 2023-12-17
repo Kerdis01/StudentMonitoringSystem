@@ -6,6 +6,7 @@ variables:
   GO_VERSION: '1.18'
   PYTHON_VERSION: '3.8'
   PHP_VERSION: '8.1'
+  GRADLE_VERSION: '8.4.0'
 
 test_go:
   stage: test
@@ -17,7 +18,7 @@ test_go:
 
 test_java:
   stage: test
-  image: gradle:jdk${JAVA_VERSION}
+  image: gradle:${GRADLE_VERSION}-jdk${JAVA_VERSION}
   script:
     - cd qubengagefailurerisk
     - chmod +x ./gradlew
