@@ -3,6 +3,10 @@ from totalHours import app
 from totalHours import calculate_total_hours
 
 class TestCalculateTotalHours(unittest.TestCase):
+    def setUp(self):
+        app.config['TESTING'] = True
+        self.client = app.test_client()
+
     def test_positive_case(self):
         attendances = [2, 3, 4]
         result = calculate_total_hours(attendances)
@@ -14,7 +18,7 @@ class TestCalculateTotalHours(unittest.TestCase):
         self.assertEqual(result, 0)
 
     def test_endpoint_availability(self):
-        response = app.get('/calculate_total_hours')
+        response = self.client.get('/calculate_total_hours')
         self.assertEqual(response.status_code, 200)
         data = response.get_json()
         self.assertIn('total_hours', data)
