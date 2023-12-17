@@ -30,7 +30,6 @@ test_java:
     paths:
       - qubengagefailurerisk/build/test-results/test/
 
-
 test_python:
   stage: test
   image: python:${PYTHON_VERSION}
