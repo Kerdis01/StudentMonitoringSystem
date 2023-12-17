@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, make_response
 from flask_bcrypt import Bcrypt #this does work, vscode just says it doesn't /shrug
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import uuid
 
 # Initialize Flask App
@@ -18,6 +18,7 @@ users_db = {
 }
 
 @app.route('/authenticate', methods=['POST'])
+@cross_origin()
 def authenticate():
     data = request.get_json()
     username = data.get('username')

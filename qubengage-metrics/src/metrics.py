@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import requests
 import random
 import time
@@ -88,6 +88,7 @@ def monitor_service():
         time.sleep(5)
 
 @app.route('/metrics', methods=['GET'])
+@cross_origin()
 def get_metrics():
     # This endpoint returns the current status of all services
     return jsonify(endpoints_status)
