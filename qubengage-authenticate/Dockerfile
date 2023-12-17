@@ -17,4 +17,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 7001
 
 # run the auth app
-CMD [ "python" "src/authenticate.py" ]
+CMD ["python", "src/authenticate.py"]

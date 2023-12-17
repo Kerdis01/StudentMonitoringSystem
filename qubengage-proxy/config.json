@@ -16,5 +16,11 @@
     },
     "/averagehours": {
         "GET": "http://averagehours-40292852.qpc.hal.davecutting.uk/calculate_average_hours"
+    },
+    "/authenticate": {
+        "GET": "http://authenticate-40292852.qpc.hal.davecutting.uk/authenticate"
+    },
+    "/metrics": {
+        "GET": "http://metrics-40292852.qpc.hal.davecutting.uk/metrics"
     }
 }

@@ -1,5 +1,5 @@
 # Use the official Gradle image with JDK 17 for the build stage
-FROM gradle:8.5.0-jdk21 as builder
+FROM gradle:8.4.0-jdk21 as builder
 WORKDIR /app
 COPY build.gradle settings.gradle /app/
 COPY gradlew /app/

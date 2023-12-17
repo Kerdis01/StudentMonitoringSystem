@@ -20,7 +20,7 @@ public class QubengagefailureriskApplicationTests {
 	@Test
 	public void whenEngagementScoreBelowCutOff_thenReturnAtRisk() throws Exception {
 		this.mockMvc.perform(get("/check_risk")
-				.param("engagementScore", "0.50") // Pass the score as a decimal
+				.param("engagementScore", "50")
 				.param("cutOff", "60"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.studentFailureRisk").value("Student is at risk of failure."));
@@ -29,7 +29,7 @@ public class QubengagefailureriskApplicationTests {
 	@Test
 	public void whenEngagementScoreAboveCutOff_thenReturnNotAtRisk() throws Exception {
 		this.mockMvc.perform(get("/check_risk")
-				.param("engagementScore", "0.70")
+				.param("engagementScore", "70")
 				.param("cutOff", "60"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.studentFailureRisk").value("Student is not at risk of failure."));
