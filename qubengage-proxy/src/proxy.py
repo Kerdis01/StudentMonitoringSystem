@@ -70,7 +70,7 @@ def proxy(path):
                 return response
             except requests.exceptions.RequestException as e:
                 print(f"An error occurred: {e}")
-                return jsonify({'error': 'Internal server error'}), 500
+            return jsonify({'error': 'Internal server error', 'message': str(e)}), 500
         else:
             return jsonify({'error': 'Method not allowed'}), 405
     else:

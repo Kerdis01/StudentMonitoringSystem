@@ -59,7 +59,7 @@
         }
 
         function displayEngagementScore(engagementScore) {
-            const formattedScore = (engagementScore).toFixed(2) + '%';
+            const formattedScore = (engagementScore*100).toFixed(2) + '%';
             document.getElementById('output-text').value = 'Student Engagement Score: ' + formattedScore;
         }
 
