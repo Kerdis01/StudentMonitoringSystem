@@ -30,8 +30,7 @@ function calculateStudentEngagementScore(lab, lecture, support, canvas) {
     const supportTotalWeighted = support * supportWeight / supportTotalHours;
     const canvasTotalWeighted = canvas * canvasWeight / canvasTotalHours;
 
-    engagementScore = (lectureTotalWeighted + labTotalWeighted + supportTotalWeighted + canvasTotalWeighted)*100;
-    const engagementScore = Number(engagementScore.toFixed(2))
+    engagementScore = lectureTotalWeighted + labTotalWeighted + supportTotalWeighted + canvasTotalWeighted;
 
     return engagementScore;
 }
