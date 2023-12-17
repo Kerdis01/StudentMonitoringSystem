@@ -20,7 +20,7 @@ public class QubengagefailureriskApplicationTests {
 	@Test
 	public void whenEngagementScoreBelowCutOff_thenReturnAtRisk() throws Exception {
 		this.mockMvc.perform(get("/check_risk")
-				.param("engagementScore", "50")
+				.param("engagementScore", "0.5")
 				.param("cutOff", "60"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.studentFailureRisk").value("Student is at risk of failure."));

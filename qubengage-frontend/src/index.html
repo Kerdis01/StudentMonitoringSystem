@@ -12,9 +12,10 @@
         let maxminURL = proxyBaseURL + "/maxmin";
         let sortedURL = proxyBaseURL + "/sorted";
         let totalHoursURL = proxyBaseURL + "/totalhours";
-        let engagementScoreURL = proxyBaseURL + "/engagementscore";
-        // let checkRiskURL = "http://localhost:8080/check_risk"
-        let checkRiskURL = proxyBaseURL + "/checkrisk";
+        // let engagementScoreURL = proxyBaseURL + "/engagementscore";
+        let engagementScoreURL = 'http://engagementscore-40292852.qpc.hal.davecutting.uk/calculate_engagement_score';
+        // let checkRiskURL = proxyBaseURL + "/checkrisk";
+        let checkRiskURL = "http://failurerisk-40292852.qpc.hal.davecutting.uk/check_risk";
         let averageHoursURL = proxyBaseURL + "/averagehours";
         let authURL = proxyBaseURL + "/authenticate"
         let metricsURL = proxyBaseURL + "/metrics"
@@ -160,7 +161,7 @@
         }
 
         function getTotalHours() {
-            // Create a new Promise Object that we can use for averageHour calculations
+            // Create a new Promise Object for the averageHour calculation
             return new Promise((resolve, reject) => {
                 if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
                     && validateInput("attendance_3", 44) && validateInput("attendance_4", 55)) {
@@ -198,7 +199,7 @@
         }
 
         function getEngagementScore() {
-            // Create a new Promise Object that we can use for failureRisk calculations
+            // Create a new Promise Object that can be used for failureRisk calculations
             return new Promise((resolve, reject) => {
                 if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
                     && validateInput("attendance_3", 44) && validateInput("attendance_4", 55)) {
