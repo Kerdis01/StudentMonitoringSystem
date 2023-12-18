@@ -38,18 +38,19 @@ class maxMinFunctionsTest extends TestCase
     }
 
     public function testWithUnequalArrayLengthsExpectingException() {
+        $this->expectException(\LengthException::class);
+        $this->expectExceptionMessage('Arrays $items and $attendances must have the same length.');
         $items = ['Item 1', 'Item 2', 'Item 3'];
         $attendances = [20, 20];
         getMaxMin($items, $attendances);
-        $this->expectException(\InvalidArgumentException::class);
     }
 
     public function testWithNegativeAttendances() {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("All attendance values must be positive.");
         $items = ['Item 1', 'Item 2', 'Item 3'];
         $attendances = [-10, -20, -30];
         getMaxMin($items, $attendances);
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("All attendance values must be positive.");
     }
 
     public function testWithSingleItem() {

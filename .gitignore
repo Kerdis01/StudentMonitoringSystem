@@ -31,3 +31,6 @@ build/
 
 ### Composer ###
 /vendor/
+
+### PHPUnit files ###
+.phpunit.result.cache
