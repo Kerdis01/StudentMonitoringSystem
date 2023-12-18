@@ -19,6 +19,15 @@ function getMaxMin($items, $attendances)
         throw new \LengthException('Arrays $items and $attendances must have the same length.');
     }
 
+    foreach ($attendances as $attendance) {
+        if (!is_numeric($attendance)) {
+            throw new \InvalidArgumentException("All attendance values must be numeric.");
+        }
+        if ($attendance < 0) {
+            throw new \InvalidArgumentException("All attendance values must be positive.");
+        }
+    }
+
     $itemAttendances = [];
     foreach ($items as $i => $item) {
         $itemAttendances[] = ["item" => $item, "attendance" => $attendances[$i]];

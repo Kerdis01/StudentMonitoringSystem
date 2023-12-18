@@ -16,6 +16,15 @@ function getSortedAttendance($items, $attendances) {
     if (count($items) !== count($attendances)) {
         throw new \LengthException('The number of items must match the number of attendances.');
     }
+
+    foreach ($attendances as $attendance) {
+      if (!is_numeric($attendance)) {
+          throw new \InvalidArgumentException("All attendance values must be numeric.");
+      }
+      if ($attendance < 0) {
+          throw new \InvalidArgumentException("All attendance values must be positive.");
+      }
+  }
     
     $item_attendances = array();
     for ($i = 0; $i < count($items); $i++) {
