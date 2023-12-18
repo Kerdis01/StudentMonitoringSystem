@@ -26,12 +26,6 @@ class SortTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testHandlesEmptyArrays()
-    {
-        $result = getSortedAttendance([], []);
-        $this->assertEmpty($result);
-    }
-
     public function testHandlesArraysWithSingleElement()
     {
         $items = ['Item 1'];

@@ -12,7 +12,7 @@ func TestCalculateAverageHoursHandler(t *testing.T) {
 		name           string
 		totalHours     string
 		wantStatusCode int
-		want           ResponseData // Changed from wantResponse string to want ResponseData
+		want           ResponseData
 	}{
 		{
 			name:           "valid total hours",

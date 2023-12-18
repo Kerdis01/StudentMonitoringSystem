@@ -3,14 +3,20 @@ namespace QubengageMaxmin;
 
 function getMaxMin($items, $attendances)
 {
+    // Error handling: Check if both parameters are arrays
+    if (!is_array($items) || !is_array($attendances)) {
+        throw new \InvalidArgumentException('Both items and attendances must be arrays.');
+    }
+
+    // Error handling: Check for empty arrays
     if (empty($items) || empty($attendances)) {
-        // If both arrays are empty, return two empty strings as per test case.
+        // If either array is empty, return two empty strings as per test case.
         return ['', ''];
     }
 
+    // Error handling: Check if the array sizes match
     if (count($items) !== count($attendances)) {
-        // If array lengths are not equal, throw an exception as per test case.
-        throw new \InvalidArgumentException('Arrays $items and $attendances must have the same length.');
+        throw new \LengthException('Arrays $items and $attendances must have the same length.');
     }
 
     $itemAttendances = [];
