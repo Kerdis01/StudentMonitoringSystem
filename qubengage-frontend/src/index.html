@@ -53,7 +53,6 @@
             });
         }
 
-        // Now, let's modify fetchWithFallback function to use callbacks
         function fetchWithFallback(proxyUrl, staticUrl, serviceName, onSuccess, onFailure) {
             checkUrl(proxyUrl, serviceName, (responseText) => {
                 // If proxy URL succeeds, call onSuccess
@@ -75,7 +74,7 @@
         function checkUrl(url, serviceName, onSuccess, onFailure) {
             var xhttp = new XMLHttpRequest();
 
-            // Append dummy query parameters for specific services
+            // send dummy parameters to endpoints in order to receive a response
             if (serviceName === 'checkrisk') {
                 url += "?engagementScore=0&cutOff=0";
             } else if (serviceName === 'averagehours') {
@@ -107,7 +106,7 @@
             };
         }
 
-        // Call this function when the page loads to initialize the URLs
+        // Called on pageload to initialize URLs
         initializeServiceUrls();
 
         //validation functions
