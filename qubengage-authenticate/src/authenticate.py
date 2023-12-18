@@ -10,7 +10,7 @@ CORS(app)
 
 # Predefined hardcoded admin credentials (password should be hashed using bcrypt)
 admin_username = 'admin'
-admin_password_hash = bcrypt.generate_password_hash('adminpassword').decode('utf-8')  # Replace 'adminpassword' with a strong password of your choice.
+admin_password_hash = bcrypt.generate_password_hash('adminpassword').decode('utf-8')
 
 # Simple in-memory 'database' with a hardcoded admin user
 users_db = {
