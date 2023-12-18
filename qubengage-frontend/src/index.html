@@ -3,22 +3,112 @@
 
 <head>
     <title>StudentEngagementMonitoring</title>
-
+    <script src=config.js></script>
     <script type="text/javascript">
 
-        // hosted at: http://frontend-40292852.qpc.hal.davecutting.uk/
+        const serviceUrls = {
+            maxmin: { proxy: config.proxy + "/maxmin", static: config.maxmin },
+            sorted: { proxy: config.proxy + "/sorted", static: config.sorted },
+            totalhours: { proxy: config.proxy + "/totalhours", static: config.totalhours },
+            engagementscore: { proxy: config.proxy + "/engagementscore", static: config.engagementscore },
+            checkrisk: { proxy: config.proxy + "/checkrisk", static: config.checkrisk },
+            averagehours: { proxy: config.proxy + "/averagehours", static: config.averagehours },
+            auth: { proxy: config.proxy + "/authenticate", static: config.auth },
+            metrics: { proxy: config.proxy + "/metrics", static: config.metrics },
+        };
 
-        const proxyBaseURL = "http://proxy-40292852.qpc.hal.davecutting.uk"
-        let maxminURL = proxyBaseURL + "/maxmin";
-        let sortedURL = proxyBaseURL + "/sorted";
-        let totalHoursURL = proxyBaseURL + "/totalhours";
-        // let engagementScoreURL = proxyBaseURL + "/engagementscore";
-        let engagementScoreURL = 'http://engagementscore-40292852.qpc.hal.davecutting.uk/calculate_engagement_score';
-        // let checkRiskURL = proxyBaseURL + "/checkrisk";
-        let checkRiskURL = "http://failurerisk-40292852.qpc.hal.davecutting.uk/check_risk";
-        let averageHoursURL = proxyBaseURL + "/averagehours";
-        let authURL = proxyBaseURL + "/authenticate"
-        let metricsURL = proxyBaseURL + "/metrics"
+        //frontend URL handler
+        let activeServiceUrls = {};
+
+        function onFailure(response, url, serviceName) {
+            displayError(
+                `${serviceName} is currently unavailable.\n
+                URL: ${url}\n 
+                Returned Response: ${response}.`);
+        }
+
+        function onSuccess(data, url, serviceName) {
+            // console.log(`Success with URL: ${url}\nRecieved response:${data}`);
+            activeServiceUrls[serviceName] = url;
+        }
+
+        // A function to initialize the check for all services
+        function initializeServiceUrls() {
+            Object.keys(serviceUrls).forEach(service => {
+                checkServiceAvailability(service);
+            });
+        }
+
+        // Function to check service availability and set global URLs
+        function checkServiceAvailability(serviceName) {
+            const service = serviceUrls[serviceName];
+            fetchWithFallback(service.proxy, service.static, serviceName, (responseText, url) => {
+                // onSuccess: Set the service URL to the working one and proceed with the service call
+                serviceUrls[serviceName].active = url;
+                // console.log(`${serviceName} is using URL: ${url}`);
+                onSuccess(responseText, url, serviceName);
+            }, (status, failedUrl) => { // Here is the change
+                // onFailure: Display an error message in the output-text box
+                onFailure(status, failedUrl, serviceName); // Pass the correct parameters
+            });
+        }
+
+        // Now, let's modify fetchWithFallback function to use callbacks
+        function fetchWithFallback(proxyUrl, staticUrl, serviceName, onSuccess, onFailure) {
+            checkUrl(proxyUrl, serviceName, (responseText) => {
+                // If proxy URL succeeds, call onSuccess
+                onSuccess(responseText, proxyUrl, serviceName);
+            }, (status, failedUrl) => {
+                // If proxy URL fails, try the static URL
+                console.warn(`Proxy URL failed with status ${status}: ${failedUrl}`);
+                checkUrl(staticUrl, serviceName, (responseText) => {
+                    // If static URL succeeds, call onSuccess
+                    onSuccess(responseText, staticUrl, serviceName);
+                }, (status, failedUrl) => {
+                    // If static URL also fails, call onFailure
+                    console.error(`Static URL failed with status ${status}: ${failedUrl}`);
+                    onFailure(status, failedUrl, serviceName);
+                });
+            });
+        }
+
+        function checkUrl(url, serviceName, onSuccess, onFailure) {
+            var xhttp = new XMLHttpRequest();
+
+            // Append dummy query parameters for specific services
+            if (serviceName === 'checkrisk') {
+                url += "?engagementScore=0&cutOff=0";
+            } else if (serviceName === 'averagehours') {
+                url += "?total_hours=0";  // Dummy value for total_hours
+            } else if (serviceName === 'engagementscore') {
+                url += "?lab=0&lecture=0&support=0&canvas=0";  // Dummy values for each parameter
+            }
+
+            // Determine the method to use (POST for 'auth', GET for others)
+            if (serviceName === 'auth') {
+                xhttp.open('POST', url, true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send(JSON.stringify({}));
+            } else {
+                xhttp.open('GET', url, true);
+                xhttp.send();
+            }
+
+            xhttp.onload = function () {
+                if (xhttp.status >= 200 && xhttp.status < 300 || (serviceName === 'auth' && xhttp.status === 401)) {
+                    onSuccess(xhttp.responseText, url, serviceName);
+                } else {
+                    onFailure(xhttp.status, url, serviceName);
+                }
+            };
+
+            xhttp.onerror = function () {
+                onFailure(xhttp.status, url, serviceName);
+            };
+        }
+
+        // Call this function when the page loads to initialize the URLs
+        initializeServiceUrls();
 
         //validation functions
         function validateInput(inputId, maxHours) {
@@ -59,7 +149,7 @@
         }
 
         function displayEngagementScore(engagementScore) {
-            const formattedScore = (engagementScore*100).toFixed(2) + '%';
+            const formattedScore = (engagementScore * 100).toFixed(2) + '%';
             document.getElementById('output-text').value = 'Student Engagement Score: ' + formattedScore;
         }
 
@@ -86,6 +176,15 @@
         function getMaxMin() {
             if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
                 && validateInput("attendance_3", 44) && validateInput("attendance_4", 55)) {
+
+                if (!activeServiceUrls.maxmin) {
+                    displayError('The maxmin service is currently unavailable.');
+                    return;
+                }
+
+                // Use the active URL from the serviceUrls object
+                let activeMaxminUrl = serviceUrls.maxmin.active;
+
                 let item_1 = document.getElementById('item_1').value
                 let item_2 = document.getElementById('item_2').value
                 let item_3 = document.getElementById('item_3').value
@@ -113,7 +212,7 @@
                         }
                     }
                 };
-                xhttp.open("GET", maxminURL + "?item_1=" + item_1 + "&attendance_1=" + attendance_1 + "&item_2=" + item_2 + "&attendance_2=" + attendance_2
+                xhttp.open("GET", activeMaxminUrl + "?item_1=" + item_1 + "&attendance_1=" + attendance_1 + "&item_2=" + item_2 + "&attendance_2=" + attendance_2
                     + "&item_3=" + item_3 + "&attendance_3=" + attendance_3 + "&item_4=" + item_4 + "&attendance_4=" + attendance_4);
                 xhttp.send();
                 return;
@@ -123,6 +222,8 @@
         function getSortedAttendance() {
             if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
                 && validateInput("attendance_3", 44) && validateInput("attendance_4", 55)) {
+                let activeSortedUrl = serviceUrls.sorted.active;
+
                 let item_1 = document.getElementById('item_1').value
                 let item_2 = document.getElementById('item_2').value
                 let item_3 = document.getElementById('item_3').value
@@ -153,7 +254,7 @@
                         }
                     }
                 }
-                xhttp.open("GET", sortedURL + "?item_1=" + item_1 + "&attendance_1=" + attendance_1 + "&item_2=" + item_2 + "&attendance_2=" + attendance_2
+                xhttp.open("GET", activeSortedUrl + "?item_1=" + item_1 + "&attendance_1=" + attendance_1 + "&item_2=" + item_2 + "&attendance_2=" + attendance_2
                     + "&item_3=" + item_3 + "&attendance_3=" + attendance_3 + "&item_4=" + item_4 + "&attendance_4=" + attendance_4);
                 xhttp.send();
                 return;
@@ -165,6 +266,8 @@
             return new Promise((resolve, reject) => {
                 if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
                     && validateInput("attendance_3", 44) && validateInput("attendance_4", 55)) {
+                    let activetotalHoursUrl = serviceUrls.totalhours.active;
+
                     let lecture = parseInt(document.getElementById('attendance_1').value);
                     let lab = parseInt(document.getElementById('attendance_2').value);
                     let support = parseInt(document.getElementById('attendance_3').value);
@@ -189,7 +292,7 @@
                             }
                         }
                     };
-                    xhttp.open("GET", totalHoursURL + "?lab=" + lab + "&lecture=" + lecture + "&support=" + support + "&canvas=" + canvas);
+                    xhttp.open("GET", activetotalHoursURL + "?lab=" + lab + "&lecture=" + lecture + "&support=" + support + "&canvas=" + canvas);
                     xhttp.send();
                     return;
                 } else {
@@ -203,6 +306,7 @@
             return new Promise((resolve, reject) => {
                 if (validateInput("attendance_1", 33) && validateInput("attendance_2", 22)
                     && validateInput("attendance_3", 44) && validateInput("attendance_4", 55)) {
+                    let activeEngagementScoreUrl = serviceUrls.engagementscore.active;
                     let lecture = parseInt(document.getElementById('attendance_1').value);
                     let lab = parseInt(document.getElementById('attendance_2').value);
                     let support = parseInt(document.getElementById('attendance_3').value);
@@ -228,7 +332,7 @@
                         }
                     };
 
-                    xhttp.open("GET", engagementScoreURL + "?lab=" + lab + "&lecture=" + lecture + "&support=" + support + "&canvas=" + canvas);
+                    xhttp.open("GET", activeEngagementScoreUrl + "?lab=" + lab + "&lecture=" + lecture + "&support=" + support + "&canvas=" + canvas);
                     xhttp.send();
                 } else {
                     reject(new Error('Validation failed'));
@@ -242,7 +346,7 @@
                 try {
                     let cutOffEngagementScore = parseInt(document.getElementById('cut-off').value);
                     let engagementScore = await getEngagementScore(); // Wait for the promise to resolve
-
+                    let activeCheckRiskUrl = serviceUrls.checkrisk.active;
                     let xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function () {
                         if (this.readyState == 4) {
@@ -259,7 +363,7 @@
                             }
                         }
                     };
-                    xhttp.open("GET", checkRiskURL + "?engagementScore=" + engagementScore + "&cutOff=" + cutOffEngagementScore);
+                    xhttp.open("GET", activeCheckRiskUrl + "?engagementScore=" + engagementScore + "&cutOff=" + cutOffEngagementScore);
                     xhttp.send();
                 } catch (error) {
                     console.error('An error occurred:', error);
@@ -274,6 +378,7 @@
                 try {
                     let totalHours = await getTotalHours();
                     let xhttp = new XMLHttpRequest();
+                    let activeAverageHoursUrl = serviceUrls.averagehours.active;
                     xhttp.onreadystatechange = function () {
                         if (this.readyState == 4 && this.status == 200) {
                             try {
@@ -287,7 +392,7 @@
                             displayError('Request failed with status: ' + this.status);
                         }
                     };
-                    xhttp.open("GET", averageHoursURL + "?total_hours=" + totalHours);
+                    xhttp.open("GET", activeAverageHoursURL + "?total_hours=" + totalHours);
                     xhttp.send();
                 } catch (error) {
                     console.error('An error occurred:', error);
@@ -299,6 +404,7 @@
         function authenticateUser() {
             var username = prompt("Enter admin username:");
             var password = prompt("Enter admin password:");
+            let activeAuthUrl = serviceUrls.auth.active;
 
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
@@ -311,13 +417,14 @@
                     alert("Authentication Failed: " + this.responseText);
                 }
             };
-            xhttp.open("POST", authURL, true);
+            xhttp.open("POST", activeAuthUrl, true);
             xhttp.setRequestHeader("Content-type", "application/json");
             xhttp.send(JSON.stringify({ username: username, password: password }));
         }
 
         // Function to fetch metrics data
         function fetchMetricsData() {
+            let activeMetrcsUrl = serviceUrls.metrics.active
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
@@ -329,7 +436,7 @@
                     }
                 }
             };
-            xhttp.open("GET", metricsURL, true);
+            xhttp.open("GET", activeMetrcsUrl, true);
             xhttp.send();
         }
 
@@ -342,7 +449,7 @@
                 var data = metricsData[endpoint];
                 var content = document.createElement('p');
                 content.innerText = `${endpoint}: Status - ${data.status}, Code - ${data.code}, Message - ${data.message}`;
-                
+
                 if (data.status.toLowerCase().includes('down')) {
                     content.classList.add('status-down');
                 }
